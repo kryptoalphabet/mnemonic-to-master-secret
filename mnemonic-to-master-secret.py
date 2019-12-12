@@ -42,24 +42,24 @@ LANGUAGE = "english"
 
 
 def check_wordlist():
-	"""Verify the text file with the words exists otherwise download it."""
-	if not path.exists("{}.txt".format(LANGUAGE)):
-		attempts = 0
-		while attempts < 3:
-			try:
-				resp = urlopen(URL_WORDLIST.formt(LANGUAGE))
-				data = resp.read()
-				f = open("{}.txt".format(LANGUAGE), "w")
-				f.write(data)
-				f.close()
-			except URLError as e:
-				attempts += 1
-				print(e.reason)
-				sleep(3)
-			except HTTPError as e:
-				attempts += 1
-				print(e.reason)
-				sleep(3)
+    """Verify the text file with the words exists otherwise download it."""
+    if not path.exists("{}.txt".format(LANGUAGE)):
+        attempts = 0
+        while attempts < 3:
+            try:
+                resp = urlopen(URL_WORDLIST.formt(LANGUAGE))
+                data = resp.read()
+                f = open("{}.txt".format(LANGUAGE), "w")
+                f.write(data)
+                f.close()
+            except URLError as e:
+                attempts += 1
+                print(e.reason)
+                sleep(3)
+            except HTTPError as e:
+                attempts += 1
+                print(e.reason)
+                sleep(3)
 
 
 def get_indexes(args):
@@ -76,7 +76,7 @@ def get_indexes(args):
 
 
 def convert_to_binary(numbers):
-	"""Convert the numbers to a long string of binary digits."""
+    """Convert the numbers to a long string of binary digits."""
     binary = ""
     for number in numbers:
         _bin = str(bin(number))[2:]  # binaries start ith 0b - remove that
@@ -88,14 +88,14 @@ def convert_to_binary(numbers):
 
 
 def binary_to_hex(binary, words):
-	"""Convert the binary string into a hex and cut first and last 2 digit."""
+    """Convert the binary string into a hex and cut first and last 2 digit."""
     seed = str(hex(int(binary, 2)))[2:]
     if words == 12:
-    	# for 12 words (128 bit) only remove the last digit
-    	seed = seed[:-1]
-	elif words == 24:
-		# for 24 words (256 bit) remove the last two digits
-		seed = seed[:-2]
+        # for 12 words (128 bit) only remove the last digit
+        seed = seed[:-1]
+    elif words == 24:
+        # for 24 words (256 bit) remove the last two digits
+        seed = seed[:-2]
     return seed
 
 
@@ -111,8 +111,8 @@ else:
     numbers = get_indexes(args)
     # verify all passed words were in the wordslist (typo / no BIP39)
     if len(numbers) == 12 or len(numbers) == 24:
-	    binary = convert_to_binary(numbers)
-	    seed = binary_to_hex(binary, len(numbers))
-	    print("Success!\n\n{0}\n\nverify with command:\n\nbx mnemonic-new {0}\n".format(seed))
+        binary = convert_to_binary(numbers)
+        seed = binary_to_hex(binary, len(numbers))
+        print("Success!\n\n{0}\n\nverify with command:\n\nbx mnemonic-new {0}\n".format(seed))
     else:
-    	print("ERROR - Please check for typo. If there is none you don\'t use BIP39 compatible words.")
+        print("ERROR - Please check for typo. If there is none you don\'t use BIP39 compatible words.")
